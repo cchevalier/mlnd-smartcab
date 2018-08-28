@@ -66,3 +66,10 @@ target/
 
 #PyCharm
 .idea/
+
+*.zip
+
+/logs - v2
+/logs-backup
+/logs-backup-final
+

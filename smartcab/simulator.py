@@ -134,6 +134,7 @@ class Simulator(object):
                         if a.epsilon < tolerance: # assumes epsilon decays to 0
                             testing = True
                             trial = 1
+                            random.seed(42)
                     else:
                         testing = True
                         trial = 1

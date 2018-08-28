@@ -71,11 +71,18 @@ def plot_trials(csv):
 		return
 	
 	# Create additional features
+
+	#T-R
 	data['average_reward'] = (data['net_reward'] / (data['initial_deadline'] - data['final_deadline'])).rolling(window=10, center=False).mean()
+
+	#B-L-R
 	data['reliability_rate'] = (data['success']*100).rolling(window=10, center=False).mean()  # compute avg. net reward with window=10
+
+	#T-L
 	data['good_actions'] = data['actions'].apply(lambda x: ast.literal_eval(x)[0])
 	data['good'] = (data['good_actions'] * 1.0 / \
 		(data['initial_deadline'] - data['final_deadline'])).rolling(window=10, center=False).mean()
+
 	data['minor'] = (data['actions'].apply(lambda x: ast.literal_eval(x)[1]) * 1.0 / \
 		(data['initial_deadline'] - data['final_deadline'])).rolling(window=10, center=False).mean()
 	data['major'] = (data['actions'].apply(lambda x: ast.literal_eval(x)[2]) * 1.0 / \
@@ -84,7 +91,8 @@ def plot_trials(csv):
 		(data['initial_deadline'] - data['final_deadline'])).rolling(window=10, center=False).mean()
 	data['major_acc'] = (data['actions'].apply(lambda x: ast.literal_eval(x)[4]) * 1.0 / \
 		(data['initial_deadline'] - data['final_deadline'])).rolling(window=10, center=False).mean()
-	data['epsilon'] = data['parameters'].apply(lambda x: ast.literal_eval(x)['e']) 
+
+	data['epsilon'] = data['parameters'].apply(lambda x: ast.literal_eval(x)['e'])
 	data['alpha'] = data['parameters'].apply(lambda x: ast.literal_eval(x)['a']) 
 
 
@@ -96,7 +104,7 @@ def plot_trials(csv):
 
 
 	###############
-	### Average step reward plot
+	### Top-Right: Average step reward plot
 	###############
 	
 	ax = plt.subplot2grid((6,6), (0,3), colspan=3, rowspan=2)
@@ -113,7 +121,7 @@ def plot_trials(csv):
 
 
 	###############
-	### Parameters Plot
+	### Mid-Right: Parameters Plot
 	###############
 
 	ax = plt.subplot2grid((6,6), (2,3), colspan=3, rowspan=2)
@@ -136,7 +144,7 @@ def plot_trials(csv):
 
 
 	###############
-	### Bad Actions Plot
+	### Top-Left: Bad Actions Plot
 	###############
 	
 	actions = training_data[['trial','good', 'minor','major','minor_acc','major_acc']].dropna()
@@ -162,7 +170,7 @@ def plot_trials(csv):
 
 
 	###############
-	### Rolling Success-Rate plot
+	### Bottom-Left: Rolling Success-Rate plot
 	###############
 	
 	ax = plt.subplot2grid((6,6), (4,0), colspan=4, rowspan=2)
@@ -183,7 +191,7 @@ def plot_trials(csv):
 
 
 	###############
-	### Test results
+	### Bottom-Right: Test results
 	###############
 
 	ax = plt.subplot2grid((6,6), (4,4), colspan=2, rowspan=2)
@@ -195,8 +203,10 @@ def plot_trials(csv):
 
 		# Write success rate
 		ax.text(0.40, .9, "{} testing trials simulated.".format(len(testing_data)), fontsize=14, ha='center')
+
 		ax.text(0.40, 0.7, "Safety Rating:", fontsize=16, ha='center')
 		ax.text(0.40, 0.42, "{}".format(safety_rating), fontsize=40, ha='center', color=safety_color)
+
 		ax.text(0.40, 0.27, "Reliability Rating:", fontsize=16, ha='center')
 		ax.text(0.40, 0, "{}".format(reliability_rating), fontsize=40, ha='center', color=reliability_color)
 
